@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { styleReset } from 'react95';
@@ -7,6 +7,7 @@ import { AccountCreation } from './account_creation';
 import { bootstrapUserspace } from './bootstrap';
 import { fsOps } from './files/fs-ops';
 import '@react95/sans-serif';
+import { MainScreen } from './desktop/MainScreen';
 
 const GlobalStyles = createGlobalStyle`
   ${styleReset}
@@ -24,6 +25,8 @@ async function hashPassword(password: string): Promise<string> {
 }
 
 function App() {
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+
   useEffect(() => {
     fsOps.init(); // Only initialize fsOps once at app startup
   }, []);
@@ -32,27 +35,32 @@ function App() {
     <>
       <GlobalStyles />
       <ThemeProvider theme={original}>
-        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div>
-            <AccountCreation
-              onCreate={async (username, password) => {
-                const passwordHash = await hashPassword(password);
-                await bootstrapUserspace({ username, passwordHash });
-                alert(`Created user: ${username}`);
-              }}
-              onLogin={async (username, password) => {
-                const passwordHash = await hashPassword(password);
-                const { UserService } = await import('./users/user-service');
-                const ok = await UserService.authenticate(username, passwordHash);
-                if (ok) {
-                  alert(`Welcome back, ${username}!`);
-                } else {
-                  alert('Invalid username or password');
-                }
-              }}
-            />
+        {currentUser ? (
+          <MainScreen />
+        ) : (
+          <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div>
+              <AccountCreation
+                onCreate={async (username, password) => {
+                  const passwordHash = await hashPassword(password);
+                  await bootstrapUserspace({ username, passwordHash });
+                  alert(`Created user: ${username}`);
+                  setCurrentUser(username);
+                }}
+                onLogin={async (username, password) => {
+                  const passwordHash = await hashPassword(password);
+                  const { UserService } = await import('./users/user-service');
+                  const ok = await UserService.authenticate(username, passwordHash);
+                  if (ok) {
+                    setCurrentUser(username);
+                  } else {
+                    alert('Invalid username or password');
+                  }
+                }}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </ThemeProvider>
     </>
   );

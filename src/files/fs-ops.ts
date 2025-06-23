@@ -84,7 +84,7 @@ export class FSOps {
     await this.init();
     const meta = await localforage.getItem<FileMetadata>(metaKey(path));
     return meta || null;
-  }
+    }
 
   async readdir(path: string): Promise<string[]> {
     await this.init();
