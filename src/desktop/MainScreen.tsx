@@ -1,6 +1,7 @@
 import React from 'react';
 import { BottomBar } from './BottomBar';
 import '@react95/sans-serif';
+import { WindowManager } from './WindowManager';
 
 export const MainScreen: React.FC = () => {
   return (
@@ -14,8 +15,11 @@ export const MainScreen: React.FC = () => {
         flexDirection: 'column',
       }}
     >
-      {/* Desktop area (icons, windows) */}
-      <div style={{ flexGrow: 1 }} />
+      {/* Desktop area (scrolling windows) */}
+      <div style={{ flexGrow: 1, overflow: 'hidden' }}>
+        {/* WindowManager fills this area */}
+        <WindowManager />
+      </div>
       <BottomBar />
     </div>
   );
