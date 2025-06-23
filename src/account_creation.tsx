@@ -20,7 +20,7 @@ export function AccountCreation({ onCreate, onLogin, initialMode = 'login' }: Pr
   return (
     <Window
       style={{
-        width: 300,
+        width: 380,
         fontFamily: `'R95 Sans Serif 14pt', 'ms_sans_serif', 'Arial', sans-serif`,
       }}
     >
@@ -60,17 +60,26 @@ export function AccountCreation({ onCreate, onLogin, initialMode = 'login' }: Pr
               ? 'Enter your username and password.'
               : 'Please choose a username and password.'}
           </Panel>
-          <Button type="submit" primary>
-            {isLogin ? 'Login' : 'Create Account'}
-          </Button>
+
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
+            <Button type="submit" primary>
+              {isLogin ? 'Login' : 'Create Account'}
+            </Button>
+            <Button
+              onClick={() => setMode(isLogin ? 'create' : 'login')}
+              style={{ flexShrink: 0 }}
+            >
+              {isLogin ? 'Create Account' : 'Back to Login'}
+            </Button>
+          </div>
         </form>
-        <Panel
-          variant="well"
-          style={{ marginTop: 12, padding: 4, textAlign: 'center', cursor: 'pointer', fontSize: 12 }}
-          onClick={() => setMode(isLogin ? 'create' : 'login')}
-        >
-          {isLogin ? 'New user? Create an account' : 'Already have an account? Log in'}
-        </Panel>
       </WindowContent>
     </Window>
   );

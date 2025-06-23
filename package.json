@@ -34,5 +34,6 @@
     "jest": "^30.0.2",
     "jsdom": "^26.1.0",
     "vitest": "^3.2.4"
-  }
+  },
+  "homepage": "https://packjackisback.github.io/relotel"
 }
