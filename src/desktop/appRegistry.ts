@@ -1,7 +1,6 @@
 /// <reference types="vite/client" />
 import type { AppDefinition, AppInfo } from './types';
 
-// Vite will replace this glob with static imports at build time
 const modules = import.meta.glob('../apps/*.tsx', { eager: true }) as Record<string, any>;
 
 export const appRegistry: AppDefinition[] = Object.entries(modules).map(([path, mod]) => {
