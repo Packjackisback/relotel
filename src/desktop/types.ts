@@ -22,4 +22,15 @@ export interface WindowInstance {
   id: string;
   appId: string;
   title: string;
+}
+
+// Contract for pluggable window managers
+export interface WindowManagerProps {
+  windows: WindowInstance[];
+  activeId: string | null;
+  onOpenWindow: (appId: string) => void;
+  onCloseWindow: (windowId: string) => void;
+  onFocusWindow: (windowId: string) => void;
+  onReorderWindows: (newOrder: WindowInstance[]) => void;
+  children?: React.ReactNode;
 } 
