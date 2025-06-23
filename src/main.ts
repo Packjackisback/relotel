@@ -1,7 +1,7 @@
-import { configure, fs, InMemory } from '@zenfs/core';
-import { promises as fsp } from '@zenfs/core';
-import { FileRecord, FileMetadataRecord } from './file-metadata';
-import { fsOps } from './fs-ops';
+import { FileRecord, FileMetadataRecord } from './files/file-metadata';
+import { fsOps } from './files/fs-ops';
+
+import { shell } from './shell/shell';
 
 const output = document.getElementById('output')!;
 
@@ -11,9 +11,8 @@ function log(msg: string) {
 
 async function main() {
   try {
-    await fsOps.init();
     const file = new FileRecord(
-      'Hello ZenFS!',
+      'Hello Filer!',
       new FileMetadataRecord({
         path: '/hello.txt',
         type: 'file',

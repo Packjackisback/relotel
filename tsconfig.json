@@ -8,10 +8,12 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "types": ["vitest/globals", "node"]
+    "types": ["vitest/globals", "node"],
+    "jsx": "react-jsx"
   },
   "include": [
     "src",
+    "src/**/*.tsx",
     "test"
   ]
 }

@@ -4,21 +4,32 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vite"
+    "dev": "vite",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.11.0",
   "dependencies": {
-    "@zenfs/core": "^2.3.1",
+    "@react95/sans-serif": "^0.0.3",
+    "filer": "^1.4.1",
+    "localforage": "^1.10.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react95": "^4.0.0",
+    "styled-components": "^6.1.19",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.3",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
     "@vitest/ui": "^3.2.4",
     "jest": "^30.0.2",
     "jsdom": "^26.1.0",

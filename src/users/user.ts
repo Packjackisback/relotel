@@ -1,3 +1,5 @@
+import type { File } from '../files/file-metadata';
+
 // User types remain unchanged, but for future integration, user home directory operations should use the File type from file-metadata.
 export interface User {
   id: string; // Unique user ID
@@ -32,4 +34,4 @@ export class UserRecord implements User {
     this.permissions = init.permissions || {};
   }
 }
-// Future: Integrate File type for user home directory file operations. 
+// Future: Integrate File type for user home directory file operations (see files/file-metadata.ts) 

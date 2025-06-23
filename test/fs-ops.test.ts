@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { fsOps } from '../src/fs-ops';
-import { FileRecord, FileMetadataRecord } from '../src/file-metadata';
+import { fsOps } from '../src/files/fs-ops';
+import { FileRecord, FileMetadataRecord } from '../src/files/file-metadata';
 
 describe('FSOps', () => {
   beforeEach(async () => {
-    // Ensure a fresh state for each test
+    // Start clean
     await fsOps.init();
   });
 
