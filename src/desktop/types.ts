@@ -32,5 +32,6 @@ export interface WindowManagerProps {
   onCloseWindow: (windowId: string) => void;
   onFocusWindow: (windowId: string) => void;
   onReorderWindows: (newOrder: WindowInstance[]) => void;
+  onMinimizeWindow?: (windowId: string) => void;
   children?: React.ReactNode;
 } 

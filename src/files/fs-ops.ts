@@ -22,6 +22,7 @@ export class FSOps {
       description: 'Relotel virtual filesystem',
     });
     this.initialized = true;
+    await this.ensureSystemDirs();
   }
 
   async writeFile(
@@ -58,6 +59,7 @@ export class FSOps {
       meta = pathOrFile.metadata;
     }
     await localforage.setItem(fileKey(path), content);
+    console.log(`[fsOps] wrote file ${path}`);
     if (meta) {
       await localforage.setItem(metaKey(path), meta);
     }
@@ -76,7 +78,25 @@ export class FSOps {
     await this.init();
     const content = await localforage.getItem<string | Buffer>(fileKey(path));
     const meta = await this.readMetadata(path);
-    if (!meta) throw new Error('No metadata found for file: ' + path);
+    if (!meta) {
+      // Create default metadata if missing (e.g., bootstrapped package files)
+      const size = typeof content === 'string' ? content.length : (content as Buffer | undefined)?.byteLength || 0;
+      const defaultMeta: FileMetadata = {
+        path,
+        type: 'file',
+        owner: 'root',
+        group: 'users',
+        permissions: {
+          owner: { read: true, write: true, execute: false },
+          group: { read: true, write: false, execute: false },
+          other: { read: true, write: false, execute: false },
+        },
+        size,
+        createdAt: Date.now(),
+        modifiedAt: Date.now(),
+      };
+      return new FileRecord(content ?? '', defaultMeta);
+    }
     return new FileRecord(content ?? '', meta);
   }
 
@@ -124,16 +144,68 @@ export class FSOps {
     await localforage.setItem(metaKey(path), meta);
   }
 
-  // Helpers
+  async mkdir(path: string): Promise<void> {
+    await this.init();
+    // Ensure directory key exists
+    const existing = await localforage.getItem<string[]>(dirKey(path));
+    if (!existing) {
+      await localforage.setItem(dirKey(path), []);
+    }
+    // Add to parent dir listing
+    const parent = this.getParentDir(path);
+    if (parent) {
+      let dirList = (await localforage.getItem<string[]>(dirKey(parent))) || [];
+      const base = this.basename(path);
+      if (!dirList.includes(base)) {
+        dirList.push(base);
+        await localforage.setItem(dirKey(parent), dirList);
+      }
+    }
+    console.log(`[fsOps] created directory ${path}`);
+  }
+
   private getParentDir(path: string): string | null {
     const idx = path.lastIndexOf('/');
-    if (idx <= 0) return null;
-    return path.slice(0, idx) || '/';
+    if (idx < 0) return null; // no slash at all
+    if (idx === 0) return '/'; // entry directly under root
+    return path.slice(0, idx);
   }
   private basename(path: string): string {
     const idx = path.lastIndexOf('/');
     return idx === -1 ? path : path.slice(idx + 1);
   }
+
+  async ensureSystemDirs() {
+    const dirs = [
+      '/system',
+      '/system/bar',
+      '/system/window-manager',
+      '/system/start-menu',
+      '/system/app-bar',
+      '/apps',
+    ];
+    for (const dir of dirs) {
+      try {
+        await this.mkdir(dir);
+      } catch (e) {
+      }
+    }
+  }
+
+  
 }
 
 export const fsOps = new FSOps();
+
+// Patch fsOps.init to ensure system dirs
+const origInit = fsOps.init.bind(fsOps);
+const patchedInit: () => Promise<void> = async () => {
+  if (! (fsOps as any).initialized) {
+    await origInit();
+    await fsOps.ensureSystemDirs();
+  } else {
+    return;
+  }
+};
+// @ts-ignore
+fsOps.init = patchedInit;
