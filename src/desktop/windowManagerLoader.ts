@@ -2,19 +2,34 @@ import { fsOps } from '../files/fs-ops';
 import type { WindowManagerProps } from './types';
 import React from 'react';
 
-// ID of the WM to load – in future could be user setting; for now hard-coded.
-const WM_ID = 'scrolling';
+export const DEFAULT_WM_FILE = '/system/window-manager/default.txt';
 
-let cachedComponent: React.FC<WindowManagerProps> | null = null;
+async function getDefaultWMId(): Promise<string> {
+  try {
+    const file = await fsOps.readFile(DEFAULT_WM_FILE);
+    const id = String(file.content).trim();
+    return id || 'scrolling';
+  } catch {
+    return 'scrolling';
+  }
+}
 
-export async function loadWindowManager(): Promise<React.FC<WindowManagerProps>> {
-  if (cachedComponent) return cachedComponent;
+export async function setDefaultWMId(id: string): Promise<void> {
+  await fsOps.writeFile(DEFAULT_WM_FILE, id);
+}
+
+const cache = new Map<string, React.FC<WindowManagerProps>>();
+
+export async function loadWindowManager(forceId?: string): Promise<React.FC<WindowManagerProps>> {
+  const wmId = forceId ?? (await getDefaultWMId());
+
+  if (cache.has(wmId)) return cache.get(wmId)!;
 
   // Resolve manifest
-  const manifestFile = await fsOps.readFile(`/system/window-manager/${WM_ID}/manifest.json`);
+  const manifestFile = await fsOps.readFile(`/system/window-manager/${wmId}/manifest.json`);
   const manifest = JSON.parse(String(manifestFile.content));
 
-  const codeFile = await fsOps.readFile(`/system/window-manager/${WM_ID}/${manifest.entry}`);
+  const codeFile = await fsOps.readFile(`/system/window-manager/${wmId}/${manifest.entry}`);
   const code = String(codeFile.content);
 
   let component: any = null;
@@ -43,6 +58,6 @@ export async function loadWindowManager(): Promise<React.FC<WindowManagerProps>>
   }
 
   if (!component) throw new Error('Window manager component not found');
-  cachedComponent = component;
+  cache.set(wmId, component);
   return component as React.FC<WindowManagerProps>;
 } 

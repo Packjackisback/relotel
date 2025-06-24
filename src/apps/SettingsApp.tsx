@@ -38,13 +38,29 @@ const SettingsApp: React.FC = () => {
   const [selectedWM, setSelectedWM] = useState('');
 
   useEffect(() => {
-    getWindowManagers().then(list => {
+    getWindowManagers().then(async list => {
       setWindowManagers(list);
+      // Try to read current default
+      try {
+        const file = await fsOps.readFile('/system/window-manager/default.txt');
+        const current = String(file.content).trim();
+        if (current) {
+          setSelectedWM(current);
+          return;
+        }
+      } catch {}
       if (list.length > 0) {
         setSelectedWM(list[0].id);
       }
     });
   }, []);
+
+  const applyChange = async () => {
+    if (!selectedWM) return;
+    await fsOps.writeFile('/system/window-manager/default.txt', selectedWM);
+    // Simple approach: reload the page so MainScreen reinitialises with new WM
+    window.location.reload();
+  };
 
   return (
     <Window style={{ width: 360, maxWidth: '90vw', minHeight: 320 }}>
@@ -91,6 +107,11 @@ const SettingsApp: React.FC = () => {
                   </ListItem>
                 ))}
               </List>
+              <div style={{ marginTop: 12 }}>
+                <button onClick={applyChange} disabled={!selectedWM}>
+                  Apply
+                </button>
+              </div>
             </Fieldset>
           )}
           {section === 'appearance' && (
