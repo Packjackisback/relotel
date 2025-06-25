@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react'; 
 import '@react95/sans-serif';
 import type { App } from '../../src/apps/types';
 import { installAppFromDirectory, installAppFromUserUpload } from '../../src/apps/app_installation';
@@ -11,6 +11,7 @@ export const appInfo = {
 
 const PackageInstallerApp: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null); 
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -28,13 +29,18 @@ const PackageInstallerApp: React.FC = () => {
     }
   };
 
+  const handleButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <div style={{ padding: 8 }}>
       <p>Upload a package (folder with manifest.json):</p>
       <label style={{ display: 'inline-block', marginTop: 10 }}>
-        <button>Choose Package Folder</button>
+        <button onClick={handleButtonClick}>Choose Package Folder</button>
         <input
           type="file"
+          ref={fileInputRef}
           style={{ display: 'none' }}
           multiple
           onChange={handleUpload}
