@@ -1,1 +1,1 @@
-export { ScrollingWindowManager as WindowManager } from './ScrollingWindowManager'; 
+export { FloatingWindowManager as WindowManager } from '../../default/WindowManagers/FloatingWindowManager'; 

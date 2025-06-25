@@ -15,6 +15,6 @@
     "src",
     "src/**/*.tsx",
     "test"
-  ]
+, "default/apps", "default/WindowManagers"  ]
 }
 

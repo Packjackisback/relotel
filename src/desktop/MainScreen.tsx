@@ -4,6 +4,7 @@ import '@react95/sans-serif';
 import { loadWindowManager } from './windowManagerLoader';
 import { WindowInstance } from './types';
 import { appRegistry, loadAppRegistry } from './appRegistry';
+import { LoadingScreen } from '../components/LoadingScreen';
 
 interface Process {
   id: string;
@@ -111,7 +112,7 @@ export const MainScreen: React.FC = () => {
   }, [startOpen]);
 
   if (!WMComponent) {
-    return <div style={{color:'white'}}>Loading window manager...</div>;
+    return <LoadingScreen message="Loading window manager..." />;
   }
 
   return (

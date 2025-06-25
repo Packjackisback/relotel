@@ -1,9 +1,10 @@
 import { fsOps } from '../files/fs-ops';
 import * as Babel from '@babel/standalone';
 
-// Collect every `*WindowManager.tsx` file under `src/desktop`. Each should export `wmInfo`.
-const rawModules = import.meta.glob('../desktop/*WindowManager.tsx', { eager: true, as: 'raw' }) as Record<string, string>;
-const modModules = import.meta.glob('../desktop/*WindowManager.tsx', { eager: true }) as Record<string, any>;
+// Place your window manager files under `default/WindowManagers`. Each should export `wmInfo`.
+
+const rawModules = import.meta.glob('../../default/WindowManagers/*.tsx', { eager: true, as: 'raw' }) as Record<string, string>;
+const modModules = import.meta.glob('../../default/WindowManagers/*.tsx', { eager: true }) as Record<string, any>;
 
 interface WMManifest {
   id: string;

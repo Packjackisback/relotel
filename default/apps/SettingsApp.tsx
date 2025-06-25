@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Window, WindowHeader, WindowContent, Tabs, TabBody, List, ListItem, Divider, Radio, Fieldset } from 'react95';
 import '@react95/sans-serif';
-import { fsOps } from '../files/fs-ops';
+import { fsOps } from '../../src/files/fs-ops';
+
 
 export const appInfo = {
   id: 'settings',
@@ -54,6 +55,12 @@ const SettingsApp: React.FC = () => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (windowManagers.length > 0 && !selectedWM) {
+      setSelectedWM(windowManagers[0].id); // Set first item as default
+    }
+  }, [windowManagers, selectedWM]);
 
   const applyChange = async () => {
     if (!selectedWM) return;

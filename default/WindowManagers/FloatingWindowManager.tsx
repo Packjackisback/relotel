@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import '@react95/sans-serif';
-import { appRegistry } from './appRegistry';
-import type { WindowInstance, AppWindowProps, WindowManagerProps } from './types';
-import { WindowManagerContext } from './WindowManagerContext';
+import { appRegistry } from '../../src/desktop/appRegistry';
+import type { WindowInstance, AppWindowProps, WindowManagerProps } from '../../src/desktop/types';
+import { WindowManagerContext } from '../../src/desktop/WindowManagerContext';
 import {
   DndContext,
   PointerSensor,
@@ -14,7 +14,6 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { WindowHeader } from 'react95';
 
-// Metadata describing this window manager for the bootstrapper
 export const wmInfo = {
   id: 'floating',
   name: 'Floating Window Manager',
@@ -161,7 +160,7 @@ export const FloatingWindowManager: React.FC<WMProps> = ({
           position: 'absolute',
           left: pos.x,
           top: pos.y,
-          transform: CSS.Translate.toString({ x: translate.x, y: translate.y }),
+          transform: CSS.Translate.toString({ x: translate.x, y: translate.y, scaleX: 1, scaleY: 1 }),
           width: 400,
           zIndex,
           background: 'white',

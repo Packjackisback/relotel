@@ -9,6 +9,8 @@ import * as DndKitSortable from '@dnd-kit/sortable';
 import * as DndKitUtilities from '@dnd-kit/utilities';
 import { appRegistry } from './desktop/appRegistry';
 import { WindowManagerContext } from './desktop/WindowManagerContext';
+import { UserService } from './users/user-service';
+import { installAppFromUserUpload, installAppFromDirectory } from './apps/app_installation';
 // Expose the React95 component library globally so that dynamically-loaded
 // UMD bundles for built-in apps can `require('react95')`.
 (window as any).React95 = React95;
@@ -20,6 +22,8 @@ import { WindowManagerContext } from './desktop/WindowManagerContext';
 (window as any).DndKitUtilities = DndKitUtilities;
 (window as any).appRegistry = appRegistry;
 (window as any).WindowManagerContext = WindowManagerContext;
+(window as any).installAppFromUserUpload = installAppFromUserUpload;
+(window as any).installAppFromDirectory = installAppFromDirectory;
 import { AccountCreation } from './account_creation';
 import { bootstrapUserspace } from './bootstrap';
 import { fsOps } from './files/fs-ops';
@@ -72,6 +76,10 @@ function App() {
             <div>
               <AccountCreation
                 onCreate={async (username, password) => {
+                  if(await UserService.getUser(username)) {
+                    alert('User already exists');
+                    return;
+                  }
                   const passwordHash = await hashPassword(password);
                   await bootstrapUserspace({ username, passwordHash });
                   alert(`Created user: ${username}`);

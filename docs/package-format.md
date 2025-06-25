@@ -20,7 +20,7 @@ The same layout works whether the package ships with the code-base (compiled dur
        └─ main.js
 ```
 
-> **Tip**  Built-in TSX files under `src/apps` and `src/desktop/*WindowManager.tsx` are automatically compiled and copied to the locations above by the bootstrap scripts.  You only need to follow the format below when you are adding a package at _runtime_ or from outside the source tree.
+> **Tip**  Built-in TSX files under `src/apps` and `default/WindowManagers/*.tsx` are automatically compiled and copied to the locations above by the bootstrap scripts.  You only need to follow the format below when you are adding a package at _runtime_ or from outside the source tree.
 
 ---
 
@@ -53,7 +53,8 @@ The same layout works whether the package ships with the code-base (compiled dur
   "id": "floating",
   "name": "Floating Window Manager",
   "icon": "🪟",
-  "entry": "main.js"
+  "entry": "main.js",
+  "type": "wm"
 }
 ```
 
@@ -79,7 +80,7 @@ When working *inside* the repo you don't need to craft `manifest.json` or JS bun
 
 ```
 src/apps/MyCoolApp.tsx                  // must export `appInfo` + default component
-src/desktop/MyLayoutWindowManager.tsx   // must export `wmInfo` + default component
+default/WindowManagers/MyLayoutWindowManager.tsx   // must export `wmInfo` + default component
 ```
 
 Run `pnpm dev` and the bootstrapper will:

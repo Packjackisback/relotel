@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Window, WindowHeader, WindowContent, List, ListItem, Button, Fieldset } from 'react95';
 import '@react95/sans-serif';
-import { fsOps } from '../files/fs-ops';
+import { fsOps } from '../../src/files/fs-ops';
 
 export const appInfo = {
   id: 'filemanager',
