@@ -1,0 +1,9 @@
+{
+    "id": "sample-app",
+    "name": "Sample Application",
+    "icon": "🐋",
+    "entry": "index.tsx",
+    "type": "app",
+    "singleInstance": false
+  }
+  

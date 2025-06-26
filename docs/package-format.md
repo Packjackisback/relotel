@@ -31,7 +31,7 @@ The same layout works whether the package ships with the code-base (compiled dur
 | `id`             | ✅       | Unique slug for the package (also the directory name).                     |
 | `name`           | ✅       | Human-readable name shown in menus.                                        |
 | `icon`           | ❌       | Emoji or small string displayed in the UI.                                |
-| `entry`          | ✅       | Path to the JS bundle **inside the same directory** (e.g. `"main.js"`).   |
+| `entry`          | ✅       | Path to the bundle **inside the same directory** (e.g. `"main.tsx"`).   |
 | `type`           | ❌ _(apps only)_ | The string `"app"`. Helps differentiating package kinds.          |
 | `singleInstance` | ❌ _(apps only)_ | `true` = only one window allowed, `false`/omitted = many.      |
 

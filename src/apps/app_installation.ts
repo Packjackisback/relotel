@@ -10,7 +10,7 @@ export async function installAppFromUserUpload(app: App): Promise<void> {
   const fileMap = new Map<string, string>(
     files.map((f) => [f.path.replace(/^\.?\//, ''), f.content])
   );
-
+  console.log(fileMap)
   const entryCode = fileMap.get(manifest.entry);
   if (!entryCode) {
     throw new Error(`Entry file "${manifest.entry}" not found`);
@@ -77,16 +77,24 @@ function validateManifest(manifest: any): asserts manifest is Manifest {
 
 
 export async function installAppFromDirectory(files: FileList): Promise<App> {
-const fileArray = Array.from(files);
-    const fileMap = new Map<string, File>();
+  const fileArray = Array.from(files);
+  const fileMap = new Map<string, File>();
   
-    for (const file of fileArray) {
-      if (!file.webkitRelativePath) continue;
-      const relPath = file.webkitRelativePath.replace(/^\.?\//, '');
-      fileMap.set(relPath, file);
+
+  const topLevelDir = fileArray[0]?.webkitRelativePath.split('/')[0];
+  for (const file of fileArray) {
+    if (!file.webkitRelativePath) continue;
+    let relPath = file.webkitRelativePath;
+    if (topLevelDir && relPath.startsWith(`${topLevelDir}/`)) {
+      relPath = relPath.slice(topLevelDir.length + 1);
     }
-  
-    const manifestFile = fileMap.get('manifest.json');
+
+  fileMap.set(relPath, file);
+}
+    let manifestFile: File | undefined;
+    for(const [path, file] of fileMap.entries()) 
+      if(path.endsWith("manifest.json")) 
+        manifestFile = file
     if (!manifestFile) {
       throw new Error('Missing manifest.json in uploaded app');
     }
